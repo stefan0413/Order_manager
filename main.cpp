@@ -9,9 +9,7 @@ int main(int argc, char *argv[])
 {
     Order_manager orderManager(10, 0);
 
-    Order order("Bokluchki", "1234a", 50, 6);
-
-    orderManager.add_order(order);
+    orderManager.load_form_file("orders.txt");
 
     orderManager.print_orders();
 

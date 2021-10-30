@@ -32,8 +32,14 @@ void Order_manager::print_orders()
 
 void Order_manager ::save_to_file(string file_name)
 {
-    ofstream myfile;
-    myfile.open("orders.txt", ios::app);
+    fstream myfile;
+    myfile.open(file_name, ios::app);
+
+    if (!myfile.is_open())
+    {
+        return;
+        // Exception
+    }
 
     for (int i = 0; i < orders.size(); i++)
     {
@@ -46,6 +52,34 @@ void Order_manager ::save_to_file(string file_name)
     myfile.close();
 }
 
-void load_from_file()
+void Order_manager ::load_form_file(string file_name)
 {
+    orders.clear();
+
+    fstream myfile;
+    myfile.open(file_name, ios::in);
+
+    if (!myfile.is_open())
+    {
+        // Exeption
+        return;
+    }
+
+    string name_1;
+    string serialNumber;
+    string orderedParts;
+    string deadline;
+
+    while (myfile >> name_1 >> serialNumber >> orderedParts >> deadline)
+    {
+        int o_Parts = stoi(orderedParts);
+        int deadL = stoi(deadline);
+
+        Order orderche(name_1, serialNumber, o_Parts, deadL);
+
+        orders.push_back(orderche);
+        curr_parts += orderche.get_order_parts();
+    }
+
+    myfile.close();
 }

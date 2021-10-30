@@ -45,6 +45,11 @@ string Order::get_serial_number()
     return this->serial_number;
 }
 
+void Order :: set_name(string name) {this->name = name; }
+void Order :: set_serial_number(string serial_number) { this->serial_number = serial_number; }
+void Order :: set_order_parts(int ordered_parts){ this-> ordered_parts = ordered_parts; }
+void Order :: set_deadline(int deadline){this->deadline = deadline;}
+
 void Order::print_order()
 {
     cout << "The order's name is: " << name << endl;
