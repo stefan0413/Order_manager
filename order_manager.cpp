@@ -30,22 +30,48 @@ void Order_manager::print_orders()
     cout << "Days before: " << orders[orders.size() - 1].get_deadline() - ceil((double)(curr_parts / max_num)) << endl;
 }
 
-void Order_manager ::save_to_file(string file_name)
+void Order_manager :: save_to_file(string file_name)
 {
-    ofstream myfile;
-    myfile.open("orders.txt", ios::app);
+    fstream myfile(file_name, ios::app);
+    
+    if( myfile.is_open() ){
 
-    for (int i = 0; i < orders.size(); i++)
-    {
-        myfile << orders[i].get_name() << endl;
-        myfile << orders[i].get_serial_number() << endl;
-        myfile << orders[i].get_order_parts() << endl;
-        myfile << orders[i].get_deadline() << endl;
+        for (int i = 0; i < orders.size(); i++)
+        {
+            myfile << orders[i].get_name() << endl;
+            myfile << orders[i].get_serial_number() << endl;
+            myfile << orders[i].get_order_parts() << endl;
+            myfile << orders[i].get_deadline() << endl;
+        }
+
+        myfile.close();
+
+    }else{
+
+        // EXCEPTION
     }
-
-    myfile.close();
 }
 
-void load_from_file()
+void Order_manager :: load_form_file (string file_name)
 {
+    string line;
+    ifstream myfile(file_name);
+    
+    if( myfile.is_open() ) {
+        
+        while(myfile, EOF){
+            int i = 0;
+            Order order;
+                orders[i].set_name(getline (myfile,line));
+                orders[i].set_serial_number(getline(myfile,line));
+                orders[i].set_order_parts(getline(myfile, line));
+                orders[i].set_deadline(getline(myfile, line));
+            
+        }
+
+        myfile.close();
+    }
+
+
+
 }
