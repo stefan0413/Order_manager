@@ -15,6 +15,10 @@ void Order_manager::add_order(Order order)
 {
     orders.push_back(order);
     curr_parts += order.get_order_parts();
+
+    if(curr_parts > order.get_deadline() * max_num) {
+        throw "The order can't be done";
+    }
 }
 
 void Order_manager::print_orders()
@@ -32,9 +36,19 @@ void Order_manager::print_orders()
 
 void Order_manager :: save_to_file(string file_name)
 {
-    fstream myfile(file_name, ios::app);
+    fstream myfile;
+    myfile.open(file_name, ios::app);
+
+    if (!myfile.is_open())
+    {
+
+        throw   "file can't be open";
     
-    if( myfile.is_open() ){
+    } else if(myfile.gcount() == 0){
+    
+        throw "file empty";
+    
+    }
 
         for (int i = 0; i < orders.size(); i++)
         {
@@ -45,33 +59,41 @@ void Order_manager :: save_to_file(string file_name)
         }
 
         myfile.close();
-
-    }else{
-
-        // EXCEPTION
-    }
 }
 
-void Order_manager :: load_form_file (string file_name)
+void Order_manager ::load_form_file(string file_name)
 {
-    string line;
-    ifstream myfile(file_name);
-    
-    if( myfile.is_open() ) {
-        
-        while(myfile, EOF){
-            int i = 0;
-            Order order;
-                orders[i].set_name(getline (myfile,line));
-                orders[i].set_serial_number(getline(myfile,line));
-                orders[i].set_order_parts(getline(myfile, line));
-                orders[i].set_deadline(getline(myfile, line));
-            
-        }
+    orders.clear();
 
-        myfile.close();
+    fstream myfile;
+    myfile.open(file_name, ios::in);
+
+    if (!myfile.is_open())
+    {
+      
+        throw "file can't be open";
+    
+    }else if(myfile.gcount() == 0){
+        
+        throw "file is empty";
+
     }
 
+    string name_1;
+    string serialNumber;
+    string orderedParts;
+    string deadline;
 
+    while (myfile >> name_1 >> serialNumber >> orderedParts >> deadline)
+    {
+        int o_Parts = stoi(orderedParts);
+        int deadL = stoi(deadline);
 
+        Order orderche(name_1, serialNumber, o_Parts, deadL);
+
+        orders.push_back(orderche);
+        curr_parts += orderche.get_order_parts();
+    }
+
+    myfile.close();
 }
